@@ -8,6 +8,7 @@ package de.hpi.swa.trufflesqueak.util;
 import com.oracle.truffle.api.CompilerAsserts;
 
 import de.hpi.swa.trufflesqueak.exceptions.SqueakExceptions.SqueakException;
+import de.hpi.swa.trufflesqueak.model.BooleanObject;
 import de.hpi.swa.trufflesqueak.model.CompiledCodeObject;
 import de.hpi.swa.trufflesqueak.model.NilObject;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.AbstractBytecodeNode;
@@ -29,10 +30,7 @@ import de.hpi.swa.trufflesqueak.nodes.bytecodes.PushBytecodes.PushReceiverNode;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.PushBytecodes.PushReceiverVariableNode;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.PushBytecodes.PushRemoteTempNode;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.PushBytecodes.PushTemporaryLocationNode;
-import de.hpi.swa.trufflesqueak.nodes.bytecodes.ReturnBytecodes.ReturnConstantNode;
-import de.hpi.swa.trufflesqueak.nodes.bytecodes.ReturnBytecodes.ReturnReceiverNode;
-import de.hpi.swa.trufflesqueak.nodes.bytecodes.ReturnBytecodes.ReturnTopFromBlockNode;
-import de.hpi.swa.trufflesqueak.nodes.bytecodes.ReturnBytecodes.ReturnTopFromMethodNode;
+import de.hpi.swa.trufflesqueak.nodes.bytecodes.ReturnBytecodes;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.SendBytecodes.SecondExtendedSendNode;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.SendBytecodes.SendLiteralSelectorNode;
 import de.hpi.swa.trufflesqueak.nodes.bytecodes.SendBytecodes.SendSpecialSelectorNode;
@@ -163,17 +161,17 @@ public final class SqueakBytecodeDecoder {
             case 119:
                 return new PushConstantNode(code, index, 2L);
             case 120:
-                return ReturnReceiverNode.create(code, index);
+                return ReturnBytecodes.createReturnReceiverNode(code, index);
             case 121:
-                return ReturnConstantNode.create(code, index, true);
+                return ReturnBytecodes.createReturnConstantNode(code, index, BooleanObject.TRUE);
             case 122:
-                return ReturnConstantNode.create(code, index, false);
+                return ReturnBytecodes.createReturnConstantNode(code, index, BooleanObject.FALSE);
             case 123:
-                return ReturnConstantNode.create(code, index, NilObject.SINGLETON);
+                return ReturnBytecodes.createReturnConstantNode(code, index, NilObject.SINGLETON);
             case 124:
-                return ReturnTopFromMethodNode.create(code, index);
+                return ReturnBytecodes.createReturnTopNode(code, index);
             case 125:
-                return ReturnTopFromBlockNode.create(code, index);
+                return ReturnBytecodes.createBlockReturnNode(code, index);
             case 126:
                 return new UnknownBytecodeNode(code, index, 1, b);
             case 127:
